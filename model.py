@@ -4,7 +4,7 @@ import numpy as np
 import sklearn
 
 from keras.models import Sequential
-from keras.layers import Convolution2D, Cropping2D
+from keras.layers import Convolution2D, Cropping2D, MaxPooling2D
 from keras.layers.core import Flatten, Dense, Dropout, Lambda
 from keras.optimizers import Adam
 from keras.models import load_model
@@ -18,23 +18,22 @@ class Model(object):
         self.model = None
 
     """
-        CNN based on NVIDIA Prototype based on http://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
+        CNN based on NVIDIA Prototype  http://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
     """
     def build(self,
               input_shape=(160, 320, 3),  # This shape provided by simulator
               learning_rate=0.0001,
-              dropout_prob=0.2):
+              dropout_prob=0.7):
 
         model = Sequential()
 
         # Crop Image
-        model.add(Cropping2D(cropping=((75, 20),   # cropping top and bottom
-                                       (0, 0)),  # cropping left and right
+        model.add(Cropping2D(cropping=((55, 5),   # cropping top and bottom
+                                       (35, 35)),  # cropping left and right
                              input_shape=input_shape))
         # Normalize Image
-        model.add(Lambda(lambda x: (x / 127.5) - 1))  # Elu activation allows to use negative values.
+        model.add(Lambda(lambda x: (x / 127.5) - 1.))
 
-        # Crop input images for less processing.
         activation = "elu"
 
         model.add(Convolution2D(24, 5, 5, subsample=(2, 2), border_mode="valid", activation=activation))
@@ -46,21 +45,14 @@ class Model(object):
         model.add(Flatten())
 
         model.add(Dropout(dropout_prob))
-        model.add(Dense(1164, activation=activation))
+        model.add(Dense(700, activation=activation))
 
         model.add(Dropout(dropout_prob))
-        model.add(Dense(800, activation=activation))
-
-        model.add(Dropout(dropout_prob))
-        model.add(Dense(400, activation=activation))
-
-        model.add(Dropout(dropout_prob))
-        model.add(Dense(100, activation=activation))
+        model.add(Dense(70, activation=activation))
         model.add(Dense(1, activation=activation))
 
         model.compile(loss='mse', optimizer=Adam(lr=learning_rate))
         self.model = model
-        return model
 
     def save(self, file_name):
         self.model.save(file_name)
@@ -83,7 +75,7 @@ class Model(object):
         res = cv2.cvtColor(res, cv2.COLOR_BGR2HSV)
         random_bright = .25 + np.random.uniform()
         res[:, :, 2] = res[:, :, 2] * random_bright
-        res = cv2.cvtColor(res, cv2.COLOR_HSV2BGR)
+        res = cv2.cvtColor(res, cv2.COLOR_HSV2RGB)
         return res
 
     """
@@ -138,7 +130,7 @@ class Model(object):
         angles += a
 
         # recovery delta for left and right images
-        correction = 0.2
+        correction = 0.23
 
         left_angle = center_angle + correction
         f, a = self.__process_single_frame(record[1], left_angle)
@@ -194,6 +186,8 @@ class Model(object):
                 for line in reader:
                     samples.append(line)
 
+        # Make sure that samples are shuffled.
+
         train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
         train_generator = self.__samples_generator(train_samples, batch_size=36)
@@ -237,6 +231,7 @@ if __name__ == "__main__":
         "../p3_data/t2_recover10/driving_log.csv",
     ]
 
-    m.train(t1_features_dbs + t2_features_dbs)
+    m.train(t2_features_dbs +
+            t1_features_dbs)
 
     m.save("model.h5")

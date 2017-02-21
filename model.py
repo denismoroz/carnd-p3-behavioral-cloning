@@ -184,7 +184,8 @@ class Model(object):
             with open(csv_db) as csv_file:
                 reader = csv.reader(csv_file)
                 for line in reader:
-                    samples.append(line)
+                    if line[3] != 0:  # Ignore images with 0 angles
+                        samples.append(line)
 
         # Make sure that samples are shuffled.
 

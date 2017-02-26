@@ -178,7 +178,6 @@ class Model(object):
         plt.hist(angles, color="green",
                  bins=min(len(counts), 100)
                  )
-        #plt.axis([min(angles), max(angles), 0, max(counts)]);
         plt.ylabel("Images")
         plt.xlabel('Angle')
         plt.title(title)
@@ -270,8 +269,6 @@ class Model(object):
 if __name__ == "__main__":
     m = Model()
     m.build()
-
-    #m.load("model_t2_v1.h5")
 
     # First Track features set
     t1_features_dbs = [

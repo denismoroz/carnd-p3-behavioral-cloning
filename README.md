@@ -24,7 +24,7 @@ The goals / steps of this project are the following:
 [t1_pre_processing]:./images/t1_preprocess_data.png
 [t1_post_processing]:./images/t1_post_processing.png
 
-## Video of network model work
+## Video of model driving Udacity Simulator on both tracks
 
 * [Track 1](https://www.youtube.com/watch?v=aFap9xOKnDU)
 * [Track 2 version 1](https://www.youtube.com/watch?v=KeqglS0U8gM)

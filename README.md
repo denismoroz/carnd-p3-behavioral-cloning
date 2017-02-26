@@ -20,6 +20,16 @@ The goals / steps of this project are the following:
 [flip_result]: ./images/flip_result.jpg
 [flip_brightness]: ./images/flip_brightness.jpg
 [model]:./images/model.png
+
+[t1_pre_processing]:./images/t1_preprocess_data.png
+[t1_post_processing]:./images/t1_post_processing.png
+
+## Video of network model work
+
+* [Track 1](https://www.youtube.com/watch?v=aFap9xOKnDU)
+* [Track 2 version 1](https://www.youtube.com/watch?v=KeqglS0U8gM)
+* [Track 2 version 2](https://www.youtube.com/watch?v=aX07OHAEb-8)
+
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
